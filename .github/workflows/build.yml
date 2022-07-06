@@ -1,0 +1,107 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+    tags-ignore:
+      - '**'
+  pull_request:
+
+jobs:
+  gofmt:
+    name: Run gofmt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.x
+
+      - name: Check out code
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Run Gofmt
+        run: test -z "$(gofmt -l .)"
+
+      - name: Show diff
+        if: failure()
+        run: gofmt -d -s .
+
+  lint:
+    name: Run linters
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.x
+
+      - name: Check out code
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Run GolangCI-Lint # https://github.com/golangci/golangci-lint
+        run: docker run --rm -t -v $(pwd):/app -w /app golangci/golangci-lint:latest-alpine golangci-lint run -v
+
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.x
+
+      - name: Check out code
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Run Unit tests
+        run: go test -v -race ./...
+
+  build:
+    name: Build for ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [linux, darwin]
+    needs: [gofmt, lint, test]
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.x
+
+      - name: Check out code
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Build application
+        env:
+          GOOS: ${{ matrix.os }}
+        run: go build -ldflags="-s -w" -o /tmp/app .
+
+      - uses: actions/upload-artifact@master
+        with:
+          name: app-${{ matrix.os }}-${{ env.version }}
+          path: /tmp/app
+
+  image:
+    name: Build docker image
+    runs-on: ubuntu-latest
+    needs: [gofmt, lint, test]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Build image
+        run: docker build -t app -f Dockerfile .

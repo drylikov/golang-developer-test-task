@@ -1,0 +1,12 @@
+# IDEs
+/nbproject
+/.idea
+/.vscode
+
+# Temp dirs & trash
+/temp
+/tmp
+.DS_Store
+/cover*.*
+/app
+resources/data

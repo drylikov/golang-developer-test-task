@@ -1,0 +1,57 @@
+{{ define "home" }}
+
+    <!DOCTYPE html>
+    <html lang="en">
+    {{ template "header" }}
+
+    <body>
+
+    {{ template "navbar" }}
+
+    <main role="main" class="container">
+
+        <div class="starter-template">
+            <h1 class="splitter">Upload new data or set link for download</h1>
+            {{ if .UploadSuccess  }}
+            <div class="alert alert-success">
+                <h4>Файл успешно загружен</h4>
+            </div>
+            {{end}}
+            <div class="row">
+                <form method="post" enctype="multipart/form-data" class="col">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupFileAddon01">Upload:</span>
+                        </div>
+                        <div class="custom-file">
+                            <input name="json-data" type="file" id="myInput" class="custom-file-input">
+                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        </div>
+                    </div>
+                    <div class="input-group text-center splitter">
+                        <h4 style="width: 100%;">or</h4>
+                    </div>
+                    <div class="input-group">
+                        <label class="sr-only" for="inlineFormInputGroupUsername">Set URL:</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Set URL:</div>
+                            </div>
+                            <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="https://...">
+                        </div>
+                    </div>
+                    <div class="input-group splitter">
+                        <div class="col text-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    {{ template "footer" }}
+    </body>
+    </html>
+{{ end }}

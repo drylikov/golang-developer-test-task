@@ -1,0 +1,12 @@
+{{ define "footer" }}
+    <script src="/static/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script>
+        document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+            let fileName = document.getElementById("myInput").files[0].name;
+            let nextSibling = e.target.nextElementSibling;
+            nextSibling.innerText = fileName
+        })
+    </script>
+{{ end }}

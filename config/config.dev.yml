@@ -1,0 +1,13 @@
+storage:
+  redis:
+    hostname: '127.0.0.1'
+    port: 6379
+    password: ''
+    database: 15
+
+webserver:
+  port: ':9001'
+  tpl: './resources/tpl/'
+  tpl_pattern: '*.html'
+  static_path: './resources/static/'
+  static_prefix: '/static/'

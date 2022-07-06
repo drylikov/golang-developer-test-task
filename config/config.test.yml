@@ -1,0 +1,8 @@
+redis:
+  hostname: 'redis'
+  port: 3366
+  username: 'user'
+  password: 'fuck you'
+
+webserver:
+  port: ':9001'
